@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "api_version": "2.0.0",
+  "toolpkg_id": "com.operit.doubao_style",
+  "version": "1.0.0",
+  "author": [
+    "Doubao Style Assistant"
+  ],
+  "main": "dist/main.js",
+  "display_name": {
+    "zh": "豆包语助手",
+    "en": "Doubao Style"
+  },
+  "description": {
+    "zh": "把助手的回复写成「豆包语」：高能前置的形容词排比、疗愈式诊断、否定清单、复读与服务化收尾。双通道工作——系统提示词注入风格规范，回复结束时再补一段外壳，保证风格稳定落地。五档强度、全部参数可调、自定义词条优先、固定种子可复现预览、配置快照与回滚。只改输出风格，不改角色设定、权限与工具行为。",
+    "en": "Writes assistant replies in Doubao style: an energetic adjective barrage up front, therapeutic diagnoses, a negation inventory, deliberate repetition, and a service-flavored closing question. Two channels work together: a style specification injected into the system prompt, plus a tail shell appended when a response finishes, so the style lands even when the model ignores instructions. Five intensity levels, every knob adjustable, custom entries prioritized, seed-reproducible previews, and configuration snapshots with rollback. Output style only; character, permissions, and tool behavior stay untouched."
+  },
+  "enabled_by_default": false,
+  "installation_scope": "device",
+  "subpackages": [
+    {
+      "id": "doubao_tools",
+      "entry": "dist/tools/doubao_tools.js",
+      "enabled_by_default": false,
+      "display_name": {
+        "zh": "豆包语工具",
+        "en": "Doubao Style Tools"
+      },
+      "description": {
+        "zh": "doubao_status / doubao_configure / doubao_render / doubao_lexicon：让模型查看当前档位、调整参数、把一段文本渲染成豆包语、读取词库规模。",
+        "en": "doubao_status / doubao_configure / doubao_render / doubao_lexicon: lets the model inspect the active level, adjust parameters, render arbitrary text into Doubao style, and read lexicon sizes."
+      }
+    }
+  ]
+}

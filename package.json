@@ -1,0 +1,16 @@
+{
+  "name": "operit-doubao-style",
+  "version": "1.0.0",
+  "private": true,
+  "description": "豆包语助手：为 Operit2 注入豆包语风格规范，并在回复结束时追加六段外壳。五档强度、参数可调、自定义词条、可复现预览、配置快照回滚。",
+  "license": "MIT",
+  "scripts": {
+    "data": "node scripts/gen-data.mjs",
+    "build": "npm run data && tsc -p tsconfig.json",
+    "pack": "node scripts/build.mjs",
+    "test": "node test/core.test.mjs && node test/hooks.test.mjs && node test/tools.test.mjs && node test/fuzz.test.mjs"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}
