@@ -9,9 +9,11 @@
  * 这是开发期脚本，允许用 node 内置模块；产物（src/data/*.data.ts）不引用任何内置模块。
  *
  * 用法：
- *   node scripts/gen-data.mjs                 # 默认读 /root/DSHA开发/dsh-doubao/lib
+ *   node scripts/gen-data.mjs                 # 默认读仓库内 vendor/（CI 与离线构建都走这条）
  *   node scripts/gen-data.mjs <源目录>         # 指定 dsh-doubao/lib 的路径
  *   DOUBAO_SOURCE_DIR=<源目录> node scripts/gen-data.mjs
+ *
+ * 源 JSON 已 vendor 到仓库根目录的 vendor/，CI 不再依赖本机的 dsh-doubao 检出。
  *
  * 来源：移植自 dsh-doubao/lib/lexicon.json 与 dsh-doubao/lib/phrase-bank.json。
  */
@@ -24,8 +26,20 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "..");
 const outDir = path.join(root, "src", "data");
 
-const DEFAULT_SOURCE = "/root/DSHA开发/dsh-doubao/lib";
-const sourceDir = process.argv[2] ?? process.env.DOUBAO_SOURCE_DIR ?? DEFAULT_SOURCE;
+const VENDORED_SOURCE = path.join(root, "vendor");
+const LOCAL_SOURCE = "/root/DSHA开发/dsh-doubao/lib";
+
+function firstExisting(candidates) {
+  for (const candidate of candidates) {
+    if (candidate && fs.existsSync(candidate)) return candidate;
+  }
+  return null;
+}
+
+const explicit = process.argv[2] ?? process.env.DOUBAO_SOURCE_DIR ?? "";
+const sourceDir = explicit !== ""
+  ? explicit
+  : firstExisting([VENDORED_SOURCE, LOCAL_SOURCE]) ?? VENDORED_SOURCE;
 
 function fail(message) {
   console.error("生成失败：" + message);

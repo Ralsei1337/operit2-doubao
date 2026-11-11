@@ -408,7 +408,9 @@ export async function onChatResponse(
     }
 
     const state: ResponseState = responseStates.get(key) ?? { hasToolCall: false, markdown: "", emittedText: null };
-    const parts = Array.isArray(payload.parts) ? payload.parts : [];
+    const rawParts = Array.isArray(payload.parts) ? payload.parts : [];
+    // 宿主快照里混进 null / 非对象元素时按「没有这一段」处理，不能让整轮抛异常。
+    const parts = rawParts.filter((part): part is ChatNamespace.MessagePart => typeof part === "object" && part !== null);
     if (parts.length > 0) {
       state.hasToolCall = parts.some((part) => part.kind === "tool_call" || part.kind === "tool_result");
       state.markdown = parts
