@@ -35,6 +35,12 @@ npm run pack       # 打 artifacts/com.operit.doubao_style-1.0.0.toolpkg
 
 `scripts/build.mjs` 会在打包前校验：manifest 可解析、`main` / `subpackages[].entry` 指向真实文件、主入口导出 `registerToolPkg`、子包入口含 `METADATA` 块。
 
+测试（Node 直接跑，不需要装 Operit2）：
+
+```bash
+npm test    # core（核心纯函数）/ hooks（两个钩子）/ tools（子包工具）/ fuzz（畸形输入）
+```
+
 ---
 
 ## 三个入口
