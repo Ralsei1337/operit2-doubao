@@ -1,0 +1,59 @@
+name: build
+
+on:
+  push:
+    branches: [main, master]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: 构建 .toolpkg
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 检出
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 生成数据模块
+        run: npm run data
+
+      - name: 类型检查与编译
+        run: npx tsc -p tsconfig.json --noEmit
+
+      - name: 编译
+        run: npx tsc -p tsconfig.json
+
+      - name: 测试
+        run: npm test
+
+      - name: 打包
+        run: npm run pack
+
+      - name: 上传构建产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: toolpkg
+          path: artifacts/*.toolpkg
+          if-no-files-found: error
+
+      - name: 发布 Release（仅 tag）
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*.toolpkg
+          generate_release_notes: true
